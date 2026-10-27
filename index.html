@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MANAWI - Portal Komunitas Mahasiswa (SIPERUBA UT)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              600: '#2563eb',
+              800: '#1e3a8a',
+              900: '#0f172a',
+              sidebar: '#1e293b',
+              accent: '#3b82f6',
+              gold: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="flex items-center justify-between px-6 py-3">
+      <!-- Logo Brand -->
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-900 text-amber-400 p-2 rounded-lg font-bold flex items-center justify-center w-10 h-10 shadow">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.89 9L12 4.57 20.11 9 12 13.43 3.89 9zM5 12.38v4.86L12 21l7-3.76v-4.86l-7 3.81-7-3.81z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-slate-900 tracking-tight leading-none">MANAWI</h1>
+          <p class="text-xs text-slate-500 font-medium">PORTAL KOMUNITAS MAHASISWA</p>
+        </div>
+      </div>
+
+      <!-- User Profile Header Info & Action -->
+      <div class="flex items-center gap-4">
+        <div id="header-user-info" class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+          <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-blue-600"/>
+          <div class="text-left text-xs">
+            <p id="header-name" class="font-bold text-slate-800">Alwan Satria</p>
+            <p id="header-nim-prodi" class="text-slate-500">267006111086 • Informatika</p>
+          </div>
+          <div class="bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold text-xs flex items-center gap-1 border border-amber-300">
+            <span>★</span> <span id="header-reputation">4.9</span>
+          </div>
+        </div>
+
+        <button onclick="toggleLoginModal()" class="px-3 py-1.5 text-xs font-semibold bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Ganti Akun Demo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- SIDEBAR NAVIGASI -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-lg">
+      <div class="p-4">
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-3">Menu Utama</div>
+        <nav class="space-y-1">
+          <button onclick="switchTab('eksplor')" id="nav-eksplor" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition bg-blue-600 text-white shadow">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <span>Eksplor & Pinjam</span>
+            </div>
+            <span class="bg-blue-800 text-blue-100 text-xs px-2 py-0.5 rounded-full">Katalog</span>
+          </button>
+
+          <button onclick="switchTab('pinjaman')" id="nav-pinjaman" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 text-slate-300">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Pinjaman Saya</span>
+            </div>
+            <span id="badge-pinjaman" class="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">1 Aktif</span>
+          </button>
+
+          <button onclick="switchTab('permintaan')" id="nav-permintaan" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 text-slate-300">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>Permintaan Masuk</span>
+            </div>
+            <span id="badge-permintaan" class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">1 Baru</span>
+          </button>
+
+          <button onclick="switchTab('inventaris')" id="nav-inventaris" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 text-slate-300">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              <span>Inventaris Saya</span>
+            </div>
+            <span id="badge-inventaris" class="bg-slate-700 text-slate-300 text-xs px-2 py-0.5 rounded-full">0 Barang</span>
+          </button>
+        </nav>
+
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-8 mb-4 px-3">Reputasi & Audit</div>
+        <nav class="space-y-1">
+          <button onclick="switchTab('riwayat')" id="nav-riwayat" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 text-slate-300">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Riwayat & Reputasi</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Footer Navigasi Sidebar -->
+      <div class="p-4 bg-slate-950/60 border-t border-slate-800">
+        <div class="flex items-start gap-2.5 text-xs text-slate-400">
+          <svg class="w-4 h-4 text-amber-400 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+          <div>
+            <p class="font-semibold text-slate-300">Prinsip Abstraksi Data</p>
+            <p class="mt-0.5 text-[11px] leading-relaxed text-slate-400">Peminjaman aman & transparan antar mahasiswa kampus.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+
+      <!-- TAB 1: EKSPLOR & PINJAM -->
+      <section id="tab-eksplor" class="space-y-6">
+        <!-- Banner Ekosistem Peminjaman -->
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+          <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-white/5 skew-x-12 transform origin-bottom-right"></div>
+          <div class="relative z-10">
+            <span class="inline-block bg-blue-700/80 text-blue-100 text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wider border border-blue-500/30">
+              EKOSISTEM PEMINJAMAN ANTAR-MAHASISWA
+            </span>
+            <h2 class="text-2xl font-extrabold mb-1">Sistem Peminjaman Barang Komunitas Mahasiswa</h2>
+            <p class="text-blue-100 text-sm max-w-2xl">Cari barang di sekitar kampus, periksa lokasinya dan ajukan peminjaman langsung kepada pemilik.</p>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-500 font-semibold uppercase">BARANG TERSEDIA</p>
+              <p id="stat-tersedia" class="text-2xl font-black text-slate-900 mt-1">4</p>
+            </div>
+            <div class="bg-emerald-100 text-emerald-600 p-3 rounded-lg">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-500 font-semibold uppercase">SEDANG DIPINJAM</p>
+              <p id="stat-dipinjam" class="text-2xl font-black text-slate-900 mt-1">2</p>
+            </div>
+            <div class="bg-blue-100 text-blue-600 p-3 rounded-lg">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-500 font-semibold uppercase">PERMINTAAN MASUK</p>
+              <p id="stat-permintaan" class="text-2xl font-black text-slate-900 mt-1">1</p>
+            </div>
+            <div class="bg-amber-100 text-amber-600 p-3 rounded-lg">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs text-slate-500 font-semibold uppercase">SKOR REPUTASI KOMUNITAS</p>
+              <p class="text-2xl font-black text-slate-900 mt-1 flex items-center gap-1">4.9 <span class="text-amber-500 text-xl">★</span></p>
+            </div>
+            <div class="bg-amber-100 text-amber-600 p-3 rounded-lg">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Section -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex flex-col md:flex-row gap-3">
+            <div class="relative flex-1">
+              <svg class="w-5 h-5 absolute left-3 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input id="search-input" onkeyup="filterItems()" type="text" placeholder="Cari nama barang, kategori, lokasi COD, atau pemilik..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition" />
+            </div>
+            <select id="category-filter" onchange="filterItems()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="all">Semua Kategori</option>
+              <option value="Aksesori & Presentasi">Aksesori & Presentasi</option>
+              <option value="Elektronik & Robotika">Elektronik & Robotika</option>
+              <option value="Jaringan & Kabel">Jaringan & Kabel</option>
+              <option value="Perlengkapan Belajar">Perlengkapan Belajar</option>
+            </select>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-600">
+            <div class="flex items-center gap-4">
+              <span class="font-semibold flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Filter Jam Pinjam:</span>
+              <div class="flex items-center gap-2">
+                <span>Mulai:</span>
+                <select class="border border-slate-300 rounded px-2 py-1 bg-slate-50 text-xs">
+                  <option>Pilih Jam...</option>
+                  <option>08.00</option>
+                  <option>10.00</option>
+                  <option>13.00</option>
+                </select>
+                <span>Selesai:</span>
+                <select class="border border-slate-300 rounded px-2 py-1 bg-slate-50 text-xs">
+                  <option>Pilih Jam...</option>
+                  <option>12.00</option>
+                  <option>15.00</option>
+                  <option>17.00</option>
+                </select>
+              </div>
+            </div>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="available-only-checkbox" type="checkbox" onchange="filterItems()" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+              <span>Hanya Tampilkan yang Tersedia</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Catalog Grid Items -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 mb-3">Katalog Barang Komunitas Kampus</h3>
+          <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Dynamic Items Injected via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: PINJAMAN SAYA (PELACAKAN & TIMER) -->
+      <section id="tab-pinjaman" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Pinjaman Saya (Pelacakan & Timer)</h2>
+          <p class="text-xs text-slate-500">Pantau status peminjaman aktif Anda dan alokasi timer waktu pengembalian barang.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-6">
+          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wide border-b border-slate-100 pb-3">Pelacakan Barang & Timer Tenggat Waktu Pengembalian</h3>
+
+          <!-- Active Loan Item Card -->
+          <div class="border border-amber-200 bg-amber-50/40 rounded-xl p-5 relative overflow-hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
+              <div class="flex items-start gap-4">
+                <div class="bg-amber-500 text-white p-3 rounded-lg shadow-sm">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-slate-900 text-lg">Arduino Uno R3 Ultimate Starter Kit Robotika</h4>
+                  <p class="text-xs text-slate-600 mt-1">Pemilik: <span class="font-bold text-slate-800">Alwan Satria (Anda)</span> • Titik COD: <span class="font-medium text-slate-700">Lab IoT & Robotika Lt. 2</span></p>
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded-md font-bold border border-amber-300">⏳ Menunggu Persetujuan Pemilik</span>
+                    <span class="text-xs text-slate-500">Slot: 14.00 - 16.00 WIB</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white border border-amber-300 rounded-xl px-4 py-2 text-center shadow-sm w-full md:w-auto">
+                <p class="text-[10px] text-slate-500 font-bold uppercase">Estimasi Tenggat</p>
+                <p class="text-lg font-black text-amber-600">14.00 - 15.00 WIB</p>
+                <p class="text-[10px] text-amber-700 font-medium">★ Menunggu Konfirmasi</p>
+              </div>
+            </div>
+
+            <!-- Tracker Steps -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-4 border-t border-amber-200/60 text-xs">
+              <div class="flex items-center gap-2 bg-blue-600 text-white p-2.5 rounded-lg shadow-sm font-semibold">
+                <span class="w-5 h-5 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs">1</span>
+                <span>1. Menunggu Persetujuan</span>
+              </div>
+              <div class="flex items-center gap-2 bg-slate-100 text-slate-500 p-2.5 rounded-lg font-medium border border-slate-200">
+                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs">2</span>
+                <span>2. Disetujui & Siap COD</span>
+              </div>
+              <div class="flex items-center gap-2 bg-slate-100 text-slate-500 p-2.5 rounded-lg font-medium border border-slate-200">
+                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs">3</span>
+                <span>3. Serah Terima (Timer Aktif)</span>
+              </div>
+              <div class="flex items-center gap-2 bg-slate-100 text-slate-500 p-2.5 rounded-lg font-medium border border-slate-200">
+                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-xs">4</span>
+                <span>4. Selesai & Dikembalikan</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Countdown Live Display Box -->
+          <div class="bg-slate-900 text-white p-5 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 shadow">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-blue-600 rounded-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div>
+                <p class="text-xs text-slate-400 font-semibold uppercase">Sisa Waktu Sesi Peminjaman Aktif</p>
+                <p id="countdown-timer" class="text-2xl font-mono font-bold tracking-wider text-amber-400">00:45:20</p>
+              </div>
+            </div>
+            <button onclick="alert('Permintaan konfirmasi pengembalian telah dikirim ke pemilik barang!')" class="w-full md:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow">
+              ✓ Konfirmasi Pengembalian Barang
+            </button>
+          </div>
+
+          <!-- Prosedur Pengembalian Barang -->
+          <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 text-xs text-slate-700 space-y-2">
+            <p class="font-bold text-blue-900 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+              Prosedur Pengembalian Barang:
+            </p>
+            <ol class="list-decimal list-inside space-y-1.5 text-slate-600 leading-relaxed pl-1">
+              <li>Temui pemilik barang pada lokasi pengembalian yang telah disepakati sebelum batas waktu berakhir.</li>
+              <li>Pastikan kondisi barang/perlengkapan dalam keadaan baik seperti saat pertama kali diterima.</li>
+              <li>Klik tombol <b>"Konfirmasi Pengembalian"</b> agar pemilik dapat mengkonfirmasi pengembalian KTM Anda.</li>
+              <li>Berikan penilaian ulasan dan integritas demi menjaga reputasi peminjaman antar-mahasiswa.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: PERMINTAAN MASUK (PERSETUJUAN PEMILIK) -->
+      <section id="tab-permintaan" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Permintaan Masuk (Persetujuan Pemilik)</h2>
+          <p class="text-xs text-slate-500">Kelola permintaan dari mahasiswa lain yang ingin meminjam peralatan milik Anda.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 bg-slate-50">
+            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Tabel Permintaan Peminjaman Masuk</h3>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-700">
+              <thead class="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                <tr>
+                  <th class="p-3.5">PROFIL PEMINJAM</th>
+                  <th class="p-3.5">RATING KEPERCAYAAN</th>
+                  <th class="p-3.5">BARANG & DURASI JAM PINJAM</th>
+                  <th class="p-3.5">JAMINAN DIGITAL</th>
+                  <th class="p-3.5 text-center">AKSI PERSETUJUAN</th>
+                </tr>
+              </thead>
+              <tbody id="request-table-body" class="divide-y divide-slate-200">
+                <tr id="req-row-1" class="hover:bg-slate-50 transition">
+                  <td class="p-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="w-8 h-8 rounded-full object-cover border" alt="User"/>
+                      <div>
+                        <p class="font-bold text-slate-800">Alwan Satria</p>
+                        <p class="text-[11px] text-slate-500">267006111086 • Informatika</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold border border-emerald-300 inline-flex items-center gap-1">
+                      ★ 4.9 <span class="text-[10px] text-emerald-600 font-normal">(50+ Peminjaman)</span>
+                    </span>
+                  </td>
+                  <td class="p-3.5">
+                    <p class="font-bold text-slate-800">Arduino Uno R3 Ultimate Starter Kit Robotika</p>
+                    <p class="text-[11px] text-slate-500">Durasi: <span class="font-semibold text-slate-700">14.00 - 16.00 WIB</span></p>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-mono text-[11px] font-semibold">
+                      KTM Digital Verified
+                    </span>
+                  </td>
+                  <td class="p-3.5 text-center">
+                    <div class="flex items-center justify-center gap-2">
+                      <button onclick="approveRequest('req-row-1')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition shadow-sm">
+                        ✓ Setujui
+                      </button>
+                      <button onclick="rejectRequest('req-row-1')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition shadow-sm">
+                        ✕ Tolak
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: INVENTARIS SAYA -->
+      <section id="tab-inventaris" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Inventaris Saya & Profil Pemilik</h2>
+          <p class="text-xs text-slate-500">Kelola barang yang Anda sewakan/pinjamkan gratis untuk sesama mahasiswa.</p>
+        </div>
+
+        <!-- Profil Pemilik Card -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80" class="w-16 h-16 rounded-full object-cover border-2 border-blue-600 shadow-sm" alt="Owner Profile"/>
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">Alwan Satria</h3>
+              <p class="text-xs text-slate-500">267006111086 • Informatika</p>
+              <div class="flex flex-wrap items-center gap-2 mt-2">
+                <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-0.5 rounded-md font-bold border border-amber-300">★ 4.9 (50+ Ulasan)</span>
+                <span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded border border-blue-200">📍 Priangan Tasikmalaya</span>
+                <span class="bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded border border-emerald-200">✓ Reputasi Baik</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs text-slate-600 max-w-xs">
+            <p class="font-bold text-slate-800 flex items-center gap-1 mb-1">
+              <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Prinsip Abstraksi Data:
+            </p>
+            <p class="text-[11px] leading-relaxed">Identitas Anda terlindungi. Halaman ini hanya menampilkan data publik (Nama, NIM, Program Studi). Data sensitif seperti alamat tinggal atau nomor telepon aman.</p>
+          </div>
+        </div>
+
+        <!-- Top Controls: Daftar Peralatan -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h3 class="text-md font-bold text-slate-800">Daftar Peralatan Milik Saya</h3>
+            <p class="text-xs text-slate-500">Kelola ketersediaan barang dengan mudah atau tambahkan perlengkapan baru.</p>
+          </div>
+          <button onclick="toggleAddItemModal()" class="w-full sm:w-auto px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            + Tambah Barang Baru
+          </button>
+        </div>
+
+        <!-- Inventory Container -->
+        <div id="user-inventory-container">
+          <!-- Default Empty State -->
+          <div id="inventory-empty" class="bg-white rounded-xl border border-dashed border-slate-300 p-12 text-center space-y-3">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <h4 class="font-bold text-slate-700">Belum ada barang di inventaris Anda</h4>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Daftarkan peralatan kuliah Anda yang bisa dipinjamkan sesama mahasiswa secara gratis.</p>
+            <button onclick="toggleAddItemModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5 shadow-sm">
+              + Tambah Barang Pertama
+            </button>
+          </div>
+
+          <!-- Dynamic User Inventory List Grid -->
+          <div id="inventory-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 hidden"></div>
+        </div>
+      </section>
+
+      <!-- TAB 5: RIWAYAT & REPUTASI -->
+      <section id="tab-riwayat" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Riwayat Transaksi & Reputasi Mahasiswa</h2>
+          <p class="text-xs text-slate-500">Catatan riwayat transaksi peminjaman selesai dan audit penilaian reputasi.</p>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+          <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-3">Riwayat Transaksi Peminjaman Selesai</h3>
+          
+          <div class="space-y-3">
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div class="flex items-start gap-3">
+                <div class="bg-blue-100 text-blue-700 p-2.5 rounded-lg">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm">Kabel LAN Cat6 10m</h4>
+                  <p class="text-xs text-slate-500">Peminjam: <span class="font-semibold text-slate-700">Rian Prasetyo</span> • Ditukar di Lab Komputer</p>
+                  <p class="text-[11px] text-slate-400 mt-1">Selesai pada: 21 Oktober 2026</p>
+                </div>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full border border-emerald-300">
+                ★ 5.0 (Sangat Baik)
+              </span>
+            </div>
+
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div class="flex items-start gap-3">
+                <div class="bg-blue-100 text-blue-700 p-2.5 rounded-lg">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm">Kalkulator Saintifik Casio fx-991EX ClassWiz</h4>
+                  <p class="text-xs text-slate-500">Peminjam: <span class="font-semibold text-slate-700">Alwan Satria</span> • Perpus Pusat</p>
+                  <p class="text-[11px] text-slate-400 mt-1">Selesai pada: 18 Oktober 2026</p>
+                </div>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full border border-emerald-300">
+                ★ 4.9 (Tepat Waktu)
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL 1: LOGIN / DEMO ACCOUNT SWITCHER -->
+  <div id="modal-login" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+      <!-- Modal Header Banner -->
+      <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-6 text-center relative">
+        <button onclick="toggleLoginModal()" class="absolute right-4 top-4 text-slate-300 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="w-12 h-12 bg-amber-400 text-slate-900 rounded-xl flex items-center justify-center mx-auto mb-3 shadow font-bold">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.89 9L12 4.57 20.11 9 12 13.43 3.89 9zM5 12.38v4.86L12 21l7-3.76v-4.86l-7 3.81-7-3.81z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold">Portal Masuk SIPERUBA UT</h3>
+        <p class="text-xs text-blue-200 mt-0.5">Sistem Peminjaman Barang Antar-Mahasiswa</p>
+      </div>
+
+      <!-- Modal Form Body -->
+      <form onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
+        <!-- Google Login Quick Action -->
+        <button type="button" onclick="loginDemo('Alwan Satria', '267006111086', 'Informatika')" class="w-full flex items-center justify-center gap-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.28v3.15C3.26 21.3 7.37 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.28C.46 8.21 0 10.05 0 12s.46 3.79 1.28 5.42l4-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.37 0 3.26 2.7 1.28 6.58l4 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+          Masuk dengan Google (Akun Mahasiswa)
+        </button>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-3 text-[10px] text-slate-400 uppercase font-bold tracking-wider">Atau Masuk Manual</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Mahasiswa</label>
+            <input id="login-input-name" type="text" value="Alwan Satria" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nomor Induk Mahasiswa (NIM)</label>
+            <input id="login-input-nim" type="text" value="267006111086" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Program Studi / Fakultas</label>
+            <select id="login-input-prodi" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="Informatika">Informatika</option>
+              <option value="Sistem Informasi">Sistem Informasi</option>
+              <option value="Teknik Elektro">Teknik Elektro</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
+          <span>Masuk ke Dashboard</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: DAFTARKAN BARANG KE INVENTARIS -->
+  <div id="modal-add-item" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+      <!-- Modal Banner -->
+      <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white p-5 text-center relative">
+        <button onclick="toggleAddItemModal()" class="absolute right-4 top-4 text-slate-300 hover:text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="w-10 h-10 bg-amber-400 text-slate-900 rounded-lg flex items-center justify-center mx-auto mb-2 font-bold shadow">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        </div>
+        <h3 class="text-base font-bold">Daftarkan Barang ke Inventaris</h3>
+        <p class="text-xs text-blue-200">Pinjamkan perlengkapan Anda kepada sesama mahasiswa kampus</p>
+      </div>
+
+      <!-- Modal Form Body -->
+      <form onsubmit="handleAddItemSubmit(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nama Perlengkapan / Barang</label>
+          <input id="add-name" type="text" placeholder="Contoh: Mouse Logitech Silent" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Kategori</label>
+          <select id="add-category" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="Aksesori & Presentasi">Aksesori & Presentasi</option>
+            <option value="Elektronik & Robotika">Elektronik & Robotika</option>
+            <option value="Jaringan & Kabel">Jaringan & Kabel</option>
+            <option value="Perlengkapan Belajar">Perlengkapan Belajar</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Lokasi Titik Temu COD Kampus</label>
+          <input id="add-location" type="text" placeholder="Contoh: Perpustakaan Pusat Meja Informasi" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Catatan Kondisi Barang</label>
+          <input id="add-condition" type="text" placeholder="Contoh: Kondisi prima siap pakai praktikum dan presentasi" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">URL Foto Barang (Opsional)</label>
+          <input id="add-image" type="url" placeholder="https://images.unsplash.com/... (Biarkan kosong untuk foto default)" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"/>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+          <button type="button" onclick="toggleAddItemModal()" class="px-4 py-2 border border-slate-300 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-100 transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+            ✓ Simpan ke Inventaris
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC SPA -->
+  <script>
+    // State Management Data Utama
+    let currentUser = {
+      name: "Alwan Satria",
+      nim: "267006111086",
+      prodi: "Informatika",
+      reputation: 4.9
+    };
+
+    let itemsCatalog = [
+      {
+        id: 1,
+        title: "Kalkulator Saintifik Casio fx-991EX ClassWiz",
+        category: "Perlengkapan Belajar",
+        owner: "Rian Prasetyo",
+        ownerNim: "267006111012",
+        location: "Perpustakaan Pusat Lt. 2 (Meja Diskusi 4)",
+        slot: "08.00 - 12.00 WIB | 13.00 - 15.00 WIB",
+        status: "Tersedia",
+        image: "https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=500&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        title: "Arduino Uno R3 Ultimate Starter Kit Robotika",
+        category: "Elektronik & Robotika",
+        owner: "Alwan Satria",
+        ownerNim: "267006111086",
+        location: "Lab IoT & Robotika Lt. 2 Mugarsari",
+        slot: "14.00 - 16.00 WIB",
+        status: "Sedang Dipinjam",
+        image: "https://images.unsplash.com/photo-1553406830-ef2513450d76?w=500&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 3,
+        title: "Kabel LAN Cat6 10m High Speed",
+        category: "Jaringan & Kabel",
+        owner: "Alwan Satria",
+        ownerNim: "267006111086",
+        location: "Gedung Komputer Lt. 1",
+        slot: "09.00 - 17.00 WIB",
+        status: "Tersedia",
+        image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=500&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 4,
+        title: "Presenter Wireless Pointer Logitech R400",
+        category: "Aksesori & Presentasi",
+        owner: "Siti Rahma",
+        ownerNim: "267006111045",
+        location: "Lobby Utama Kampus 2",
+        slot: "10.00 - 16.00 WIB",
+        status: "Tersedia",
+        image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=500&auto=format&fit=crop&q=80"
+      }
+    ];
+
+    let userInventory = [];
+    let activeTab = 'eksplor';
+
+    // Inisialisasi Saat Dokumen Dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+      renderCatalog();
+      renderInventory();
+      updateBadgeCounts();
+      startCountdownTimer();
+    });
+
+    // Navigasi Tab SPA
+    function switchTab(tabName) {
+      activeTab = tabName;
+      ['eksplor', 'pinjaman', 'permintaan', 'inventaris', 'riwayat'].forEach(t => {
+        const section = document.getElementById(`tab-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (t === tabName) {
+          section.classList.remove('hidden');
+          navBtn.classList.remove('hover:bg-slate-800', 'text-slate-300');
+          navBtn.classList.add('bg-blue-600', 'text-white', 'shadow');
+        } else {
+          section.classList.add('hidden');
+          navBtn.classList.add('hover:bg-slate-800', 'text-slate-300');
+          navBtn.classList.remove('bg-blue-600', 'text-white', 'shadow');
+        }
+      });
+    }
+
+    // Render Katalog Barang
+    function renderCatalog(items = itemsCatalog) {
+      const grid = document.getElementById("catalog-grid");
+      grid.innerHTML = "";
+
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="col-span-3 text-center py-10 text-slate-400 font-medium">Tidak ada barang yang ditemukan.</div>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const isAvailable = item.status === "Tersedia";
+        const badgeColor = isAvailable ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-blue-100 text-blue-800 border-blue-300";
+
+        const cardHTML = `
+          <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="relative h-44 bg-slate-100 overflow-hidden">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover"/>
+                <span class="absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full border ${badgeColor} shadow-sm">
+                  ${item.status}
+                </span>
+              </div>
+              <div class="p-4 space-y-2">
+                <h4 class="font-bold text-slate-900 text-sm line-clamp-1">${item.title}</h4>
+                <div class="text-xs text-slate-500 space-y-1">
+                  <p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> <span class="font-semibold text-slate-700">${item.owner}</span> (${item.ownerNim})</p>
+                  <p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg> <span class="truncate">${item.location}</span></p>
+                  <p class="flex items-center gap-1.5 text-[11px] text-slate-400"><svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${item.slot}</p>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 pt-0">
+              <button onclick="requestBorrow('${item.title}')" class="w-full py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Cek Jadwal & Pinjam
+              </button>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += cardHTML;
+      });
+    }
+
+    // Filter Pencarian Katalog
+    function filterItems() {
+      const searchVal = document.getElementById("search-input").value.toLowerCase();
+      const catVal = document.getElementById("category-filter").value;
+      const availableOnly = document.getElementById("available-only-checkbox").checked;
+
+      const filtered = itemsCatalog.filter(item => {
+        const matchSearch = item.title.toLowerCase().includes(searchVal) ||
+                            item.category.toLowerCase().includes(searchVal) ||
+                            item.location.toLowerCase().includes(searchVal) ||
+                            item.owner.toLowerCase().includes(searchVal);
+        const matchCat = catVal === "all" || item.category === catVal;
+        const matchAvail = !availableOnly || item.status === "Tersedia";
+
+        return matchSearch && matchCat && matchAvail;
+      });
+
+      renderCatalog(filtered);
+    }
+
+    // Render Inventaris User (Tab Inventaris Saya)
+    function renderInventory() {
+      const emptyState = document.getElementById("inventory-empty");
+      const grid = document.getElementById("inventory-grid");
+
+      if (userInventory.length === 0) {
+        emptyState.classList.remove("hidden");
+        grid.classList.add("hidden");
+      } else {
+        emptyState.classList.add("hidden");
+        grid.classList.remove("hidden");
+        grid.innerHTML = "";
+
+        userInventory.forEach((item, index) => {
+          const cardHTML = `
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+              <div>
+                <img src="${item.image}" class="w-full h-36 object-cover" alt="${item.title}"/>
+                <div class="p-4 space-y-2">
+                  <span class="text-[10px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">${item.category}</span>
+                  <h4 class="font-bold text-slate-900 text-sm">${item.title}</h4>
+                  <p class="text-xs text-slate-500"><b>COD:</b> ${item.location}</p>
+                  <p class="text-xs text-slate-500"><b>Kondisi:</b> ${item.condition}</p>
+                </div>
+              </div>
+              <div class="p-4 pt-0">
+                <button onclick="removeInventoryItem(${index})" class="w-full py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg text-xs border border-rose-200 transition">
+                  Hapus Barang
+                </button>
+              </div>
+            </div>
+          `;
+          grid.innerHTML += cardHTML;
+        });
+      }
+
+      document.getElementById("badge-inventaris").innerText = `${userInventory.length} Barang`;
+    }
+
+    // Submit Form Tambah Barang
+    function handleAddItemSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("add-name").value;
+      const category = document.getElementById("add-category").value;
+      const location = document.getElementById("add-location").value;
+      const condition = document.getElementById("add-condition").value;
+      const imageInput = document.getElementById("add-image").value;
+      const defaultImg = "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=500&auto=format&fit=crop&q=80";
+
+      const newItem = {
+        id: Date.now(),
+        title: name,
+        category: category,
+        owner: currentUser.name,
+        ownerNim: currentUser.nim,
+        location: location,
+        condition: condition,
+        slot: "08.00 - 17.00 WIB",
+        status: "Tersedia",
+        image: imageInput.trim() !== "" ? imageInput : defaultImg
+      };
+
+      // Tambahkan ke state lokal inventaris dan katalog utama
+      userInventory.push(newItem);
+      itemsCatalog.unshift(newItem);
+
+      renderInventory();
+      renderCatalog();
+      updateBadgeCounts();
+      toggleAddItemModal();
+      alert("Barang berhasil didaftarkan ke Inventaris Anda!");
+    }
+
+    function removeInventoryItem(index) {
+      const removed = userInventory.splice(index, 1)[0];
+      itemsCatalog = itemsCatalog.filter(i => i.id !== removed.id);
+      renderInventory();
+      renderCatalog();
+      updateBadgeCounts();
+    }
+
+    // Modal Control Toggles
+    function toggleLoginModal() {
+      document.getElementById("modal-login").classList.toggle("hidden");
+    }
+
+    function toggleAddItemModal() {
+      document.getElementById("modal-add-item").classList.toggle("hidden");
+    }
+
+    // Submit Login Form / Ganti Demo User
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("login-input-name").value;
+      const nim = document.getElementById("login-input-nim").value;
+      const prodi = document.getElementById("login-input-prodi").value;
+
+      loginDemo(name, nim, prodi);
+    }
+
+    function loginDemo(name, nim, prodi) {
+      currentUser.name = name;
+      currentUser.nim = nim;
+      currentUser.prodi = prodi;
+
+      document.getElementById("header-name").innerText = name;
+      document.getElementById("header-nim-prodi").innerText = `${nim} • ${prodi}`;
+
+      toggleLoginModal();
+      alert(`Selamat datang kembali, ${name}!`);
+    }
+
+    // Peminjaman Action Simulasi
+    function requestBorrow(title) {
+      alert(`Permintaan peminjaman untuk "${title}" telah dikirimkan kepada pemilik! Anda dapat memantau statusnya di menu 'Pinjaman Saya'.`);
+      switchTab('pinjaman');
+    }
+
+    // Aksi Persetujuan Tabel Permintaan Masuk
+    function approveRequest(rowId) {
+      const row = document.getElementById(rowId);
+      row.innerHTML = `
+        <td colspan="5" class="p-3.5 text-center font-bold text-emerald-700 bg-emerald-50">
+          ✓ Permintaan Berhasil Disetujui! Notifikasi dan Jaminan KTM telah dikirim ke Peminjam.
+        </td>
+      `;
+      document.getElementById("badge-permintaan").innerText = "0 Baru";
+      document.getElementById("stat-permintaan").innerText = "0";
+    }
+
+    function rejectRequest(rowId) {
+      const row = document.getElementById(rowId);
+      row.remove();
+      document.getElementById("badge-permintaan").innerText = "0 Baru";
+      document.getElementById("stat-permintaan").innerText = "0";
+    }
+
+    // Dynamic Counts Updates
+    function updateBadgeCounts() {
+      const tersedia = itemsCatalog.filter(i => i.status === "Tersedia").length;
+      const dipinjam = itemsCatalog.filter(i => i.status === "Sedang Dipinjam").length;
+      document.getElementById("stat-tersedia").innerText = tersedia;
+      document.getElementById("stat-dipinjam").innerText = dipinjam;
+    }
+
+    // Live Countdown Timer Simulasi
+    function startCountdownTimer() {
+      let seconds = 45 * 60 + 20; // 45 menit 20 detik
+      const timerDisplay = document.getElementById("countdown-timer");
+
+      setInterval(() => {
+        if (seconds <= 0) return;
+        seconds--;
+
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        timerDisplay.innerText = 
+          `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
